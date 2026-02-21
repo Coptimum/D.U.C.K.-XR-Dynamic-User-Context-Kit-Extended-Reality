@@ -1,0 +1,27 @@
+---
+description: D.U.C.K project context, scope, and tech stack
+alwaysApply: true
+---
+
+# D.U.C.K – XR Dynamic User Context Kit
+
+## Project
+- **Name:** D.U.C.K (XR Dynamic User Context Kit).
+- **Goal:** MR system on Meta Quest 3 that visualizes real-time personal and interpersonal biomarkers (heart rate, posture, sweat, voice, face) to study how that affects behavior. End goal: NeuroSwarm (biodata + social interaction analysis).
+
+## Authority docs
+When making scope, feature, or design decisions, prefer and align with:
+- `docs/PROJECT.md` – Short plan, goals, stack, phases.
+- `docs/ProjectProposal.md` – Full proposal, literature, hardware/software, data collection, BCI pipeline.
+- `docs/PlanOverview.md` – Confirmed vs maybe features, MVP, Phase 1–3.
+
+## Tech stack
+- **MR app:** Unity, C#, Meta SDK / OpenXR, Meta Quest 3.
+- **Posture sensor:** Arduino (e.g. LilyPad), C++; see Instructables posture-awareness design; code lives in `arduino/`.
+- **ML:** CNN for facial emotion, RNN for auditory emotion; pre-trained models where possible.
+- **Data flow:** Sensors → computer (processing) → Quest 3 for display.
+
+## Conventions
+- New Unity/MR code in the Unity project (e.g. `D.U.C.K-Unity/` or as specified).
+- Arduino firmware and posture-sensor scripts in `arduino/`.
+- Keep UI minimal and non-overwhelming; “put on head and it works” for MVP.
