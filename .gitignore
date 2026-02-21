@@ -1,0 +1,65 @@
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+sysinfo.txt
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# Arduino
+*.elf
+*.hex
+*.map
+*.eep
+*.lss
+*.sym
+.DS_Store
+*.o
+*.d
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Python (if used for ML scripts)
+__pycache__/
+venv/
+.venv/
+*.py[cod]
+.Python
+*.egg-info/
+dist/
+build/
+
+# Env / secrets
+.env
+.env.local
+*.pem
