@@ -1,0 +1,85 @@
+---
+alwaysApply: true
+---
+# Project Structure and Key Files
+
+This rule documents the high-level directory structure and most important files in the D.U.C.K repository.
+Use it as a reference when adding new code, documentation, or tooling so everything stays organized.
+
+## Top-level Layout
+
+The project root contains:
+
+- `README.md` – High-level overview and entry point for the repository.
+- `.gitignore` – Git ignore patterns for the project.
+- `.cursor/` – AI assistant configuration, rules, and skills metadata.
+- `docs/` – Project documentation, plans, and research material.
+- `arduino/` – Firmware and sketches for the posture and sensor hardware.
+- `telemetry/` – Host PC ingestion utilities (e.g. Pulsoid HR WebSocket test client).
+
+## `.cursor/` Directory
+
+All Cursor rules live under `.cursor/rules/`:
+
+- `.cursor/rules/cursor-rules.mdc` – How to create and maintain Cursor rules.
+- `.cursor/rules/self-improve.mdc` – Guidance for evolving rules based on emerging patterns.
+- `.cursor/rules/project.mdc` – High-level project goals and tech stack for D.U.C.K.
+- `.cursor/rules/project-structure.mdc` (this file) – Directory structure and key files overview.
+
+**Guidelines**
+
+- Keep all new rules in `.cursor/rules/` with kebab-case filenames and `.mdc` extension.
+- When you add a new major directory or cross-cutting pattern, update this file so future work stays consistent.
+
+## `docs/` Directory
+
+The `docs/` folder centralizes project documentation and planning:
+
+- `docs/FinalStretchDoc.md` – **Authoritative current scope, hardware, and goals** (single source of truth for what the team is building now).
+- `docs/MLOptions.md` – ML strategy detail: Random Forest fast path, interval model, labels, open decisions (subordinate to `FinalStretchDoc.md` if they conflict).
+- `docs/PROJECT.md` – Short project plan, goals, stack, and phases (may lag; align breaking changes with `FinalStretchDoc.md`).
+- `docs/ProjectProposal.md` – Full proposal with literature review, hardware/software stack, and pipeline.
+- `docs/PlanOverview.md` – Confirmed vs. tentative features, MVP definition, and phase breakdown.
+- `docs/ProjectBrainstorm.md` – Early brainstorming and idea exploration.
+- `docs/Obsidian - DUCK Summary.md` – Summary synced from Obsidian for higher-level context.
+- `docs/CheckLater.md` – Informal backlog / reminders (BLE pipeline polish, demos, doc sync); not authoritative over `FinalStretchDoc.md`.
+
+**Guidelines**
+
+- **Prioritize `FinalStretchDoc.md`:** update it first when scope, hardware, or goals change. Other docs under `docs/` are optional to keep aligned; they are not required to be reconciled for work to proceed.
+- Use additional markdown files in `docs/` for focused topics (experiments, meeting notes, etc.).
+
+## `arduino/` Directory
+
+The `arduino/` folder hosts the firmware for posture and sensor hardware:
+
+- `arduino/README.md` – Overview of the Arduino hardware setup and posture sensor goals.
+- `arduino/posture/posture.ino` – Main posture sensor sketch (serial + BLE notify).
+- `arduino/accelTest/` – Accelerometer testing sketches and notes:
+  - `arduino/accelTest/README.md` – Context for the accelerometer experiments.
+  - `arduino/accelTest/accelTest.ino` – Test sketch for gathering and validating accelerometer data.
+
+**Guidelines**
+
+- Keep each hardware experiment or sensor configuration in its own subfolder (e.g., `sensorNameTest/`).
+- Document wiring diagrams, assumptions, and calibration steps in a `README.md` next to relevant `.ino` files.
+- When moving an experimental sketch into production use, promote it to a clearly named file (e.g., `posture.ino`) and update `arduino/README.md`.
+
+## `telemetry/` Directory
+
+Host-side helpers to validate and ingest live data before Unity / ML wiring:
+
+- [`telemetry/README.md`](../../telemetry/README.md) – Overview of telemetry utilities.
+- [`telemetry/pulsoid-hr/`](../../telemetry/pulsoid-hr/) – Node.js client using [`@pulsoid/socket`](https://www.npmjs.com/package/@pulsoid/socket) to print real-time BPM from a Pulsoid access token.
+- [`telemetry/posture-ble/`](../../telemetry/posture-ble/) – Python + `bleak` client that prints `POSTURE,...` lines from the ESP32 over BLE.
+
+## Adding New Source Code
+
+As the project grows (e.g., Unity/MR app, ML pipelines, data processing):
+
+- Create dedicated top-level folders such as `unity/`, `ml/`, or `backend/` rather than mixing concerns.
+- Add a short `README.md` in each new top-level directory describing its purpose and how it fits into D.U.C.K.
+- Update this `project-structure.mdc` rule whenever you add:
+  - A new top-level directory, or
+  - A major subsystem with multiple subfolders or services.
+

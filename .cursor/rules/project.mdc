@@ -1,25 +1,23 @@
 ---
 description: D.U.C.K project context, scope, and tech stack
-alwaysApply: true
+alwaysApply: false
 ---
-
 # D.U.C.K – XR Dynamic User Context Kit
 
 ## Project
 - **Name:** D.U.C.K (XR Dynamic User Context Kit).
-- **Goal:** MR system on Meta Quest 3 that visualizes real-time personal and interpersonal biomarkers (heart rate, posture, sweat, voice, face) to study how that affects behavior. End goal: NeuroSwarm (biodata + social interaction analysis).
+- **Goal:** MR system on Meta Quest 3 that visualizes real-time biomarker-related signals (live heart rate from a watch, posture from a wearable, facial expression via MorphCast + Quest cameras, optional future modalities) to study how that affects behavior. End goal: NeuroSwarm (biodata + social interaction analysis). **Voice/microphone emotion is out of scope.**
 
 ## Authority docs
-When making scope, feature, or design decisions, prefer and align with:
-- `docs/PROJECT.md` – Short plan, goals, stack, phases.
-- `docs/ProjectProposal.md` – Full proposal, literature, hardware/software, data collection, BCI pipeline.
-- `docs/PlanOverview.md` – Confirmed vs maybe features, MVP, Phase 1–3.
+**`docs/FinalStretchDoc.md` is the prioritized specification** for scope, hardware, and goals. **`docs/MLOptions.md`** expands ML design (dual-model path, labels); if anything conflicts, **prefer `FinalStretchDoc.md`**. Other files under `docs/` are optional background or archive; do not use them to override `FinalStretchDoc.md` unless migrating content on purpose.
 
 ## Tech stack
-- **MR app:** Unity, C#, Meta SDK / OpenXR, Meta Quest 3.
-- **Posture sensor:** Arduino (e.g. LilyPad), C++; see Instructables posture-awareness design; code lives in `arduino/`.
-- **ML:** CNN for facial emotion, RNN for auditory emotion; pre-trained models where possible.
-- **Data flow:** Sensors → computer (processing) → Quest 3 for display.
+- **MR app:** Unity, C#, Meta SDK / OpenXR, Meta Quest 3 — **display only** for ML; no on-headset inference for now.
+- **Watch:** Live heart-rate streaming only (no sweat/EDA/SpO₂ from the watch in current plan); bridge TBD.
+- **Posture sensor:** ESP32 + ADXL335 + vibration motor; C++ (Arduino/ESP32 toolchain); code in `arduino/`.
+- **Facial expression:** [MorphCast](https://www.morphcast.com/) with Quest 3 cameras (features consumed on PC).
+- **ML:** Dual path on **host PC**: **Random Forest** (fast, discrete labels) + **interval model** (richer situational analysis; algorithm TBD). See `docs/FinalStretchDoc.md` and `docs/MLOptions.md`. Continuous arousal/stress scores possible later, not committed.
+- **Data flow:** Sensors / camera path → **host PC (all inference)** → Quest 3 **display only**.
 
 ## Conventions
 - New Unity/MR code in the Unity project (e.g. `D.U.C.K-Unity/` or as specified).

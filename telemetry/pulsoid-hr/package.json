@@ -1,0 +1,14 @@
+{
+  "name": "duck-pulsoid-hr",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Minimal Pulsoid WebSocket client to verify HR streaming for D.U.C.K",
+  "type": "module",
+  "scripts": {
+    "hr": "node hr-stream.mjs"
+  },
+  "dependencies": {
+    "@pulsoid/socket": "^1.2.0",
+    "dotenv": "^16.4.5"
+  }
+}

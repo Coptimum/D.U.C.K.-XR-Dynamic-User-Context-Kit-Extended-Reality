@@ -59,6 +59,9 @@ venv/
 dist/
 build/
 
+# Node (telemetry / small tools)
+node_modules/
+
 # Env / secrets
 .env
 .env.local

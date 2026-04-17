@@ -1,0 +1,100 @@
+---
+description: Overview of D.U.C.K tech stack and key dependency versions
+globs:
+alwaysApply: true
+---
+
+# D.U.C.K Tech Stack and Versions
+
+This rule captures the current, high-level technology stack and major dependencies for the D.U.C.K project so the agent can make consistent decisions and suggestions. Update the versions table as you lock in specific tools.
+
+## Mixed Reality Application (Meta Quest 3)
+
+- **Platform:** Meta Quest 3 (mixed reality headset).
+- **Engine:** Unity (target a current LTS release; e.g., `Unity 2022 LTS` or `Unity 2023 LTS` once chosen).
+- **Primary language:** C#.
+- **XR stack:**
+  - Meta XR SDK / OpenXR plugin for Quest 3.
+  - Unity XR Interaction Toolkit (if adopted for interactions and input).
+
+### MR-side Dependencies (to be versioned explicitly)
+
+When the Unity project is created, record the concrete versions here:
+
+- **Unity Editor:** `TODO: set exact LTS version (e.g., 2022.3.xf1)`.
+- **Meta XR SDK / OpenXR plugin:** `TODO: set version from Unity Package Manager`.
+- **XR Interaction Toolkit (if used):** `TODO: set package version`.
+- **URP/HDRP (if used):** `TODO: set render pipeline package version`.
+
+Keep all Unity/MR code under a dedicated Unity project folder (for example, `D.U.C.K-Unity/`) as described in `@project.mdc` and `docs/FinalStretchDoc.md`.
+
+## Wearable (watch)
+
+- **Role:** Livestream **heart rate only** to the host; other vitals (sweat/EDA, SpO₂, etc.) are **not** in scope from the watch unless explicitly revised in `docs/FinalStretchDoc.md`.
+- **Bridge / device:** `TODO: model and software (e.g., Gadgetbridge, vendor SDK)`.
+
+## Arduino / Hardware Firmware
+
+- **Board:** ESP32 (posture wearable); not LilyPad/Instructables BOM (superseded).
+- **Sensors:** ADXL335 (analog accelerometer) for posture; vibration motor for haptic feedback.
+- **Language:** C++ (Arduino/ESP32 dialect).
+- **Wireless (posture):** **Bluetooth LE (NimBLE)** — GATT notify with the same `POSTURE,...` lines as USB serial; no Wi‑Fi. Host test client: `telemetry/posture-ble/` (Python `bleak`).
+- **Location:** Firmware and experiments live in the `arduino/` directory:
+  - `arduino/posture/posture.ino` – main posture sensor sketch (serial + BLE).
+  - `arduino/accelTest/accelTest.ino` – accelerometer experiments.
+
+### Arduino-side Dependencies
+
+- **Arduino IDE / CLI:** `TODO: record version in use`.
+- **Board core:** `TODO: record ESP32 core package and version`.
+- **Libraries:** Document any external libraries (e.g., accelerometer drivers, sensor libraries) in `arduino/README.md` including:
+  - Library name.
+  - Version.
+  - Source (Arduino Library Manager URL or Git repository).
+
+Whenever you add or upgrade a library for the posture or sensor firmware, update both `arduino/README.md` and this rule.
+
+## Machine Learning Components
+
+- **Placement:** **All inference on host PC** for now; **Quest 3 displays** outputs only (`docs/FinalStretchDoc.md`).
+- **Facial expression:** Third-party **[MorphCast](https://www.morphcast.com/)** with Quest 3 cameras; **tabular outputs** feed feature builders on the PC (not assumed: in-house CNN on raw video).
+- **Fast path:** **Random Forest** on multimodal tabular features → **discrete labels** for frequent updates (`docs/MLOptions.md`).
+- **Interval path:** Second model on **time windows** (length TBD, e.g. ~5–30 s); richer situational summaries; **start simple** (tabular / tree-based on aggregated features); exact algorithm **TBD** with data.
+- **Future (optional):** Continuous arousal/stress-style scores—parked until needed.
+- **Out of scope:** Voice / microphone emotion—do not plan as active work.
+
+### ML Stack (proposed)
+
+- **Language:** Python.
+- **Core libraries (typical):**
+  - **scikit-learn** (Random Forest, preprocessing, baselines).
+  - `numpy`, `pandas`, `scipy` for features and alignment.
+  - Optional later: PyTorch or TensorFlow/Keras if interval model moves neural—`TODO: pin when chosen`.
+- **Detail:** `docs/MLOptions.md`.
+
+When you create a Python environment:
+
+- Add a `requirements.txt` or `pyproject.toml` at the repo root or under an `ml/` subfolder.
+- Mirror the pinned versions into this rule’s ML section so the agent can rely on them.
+
+## Data Flow and Integration
+
+- **Overall pipeline:** Sensors and camera/perception path → **host PC (all ML inference)** → Meta Quest 3 Unity app **displays** state only (small payloads over TBD transport).
+- **Integration patterns:**
+  - Use a clear boundary between data acquisition (Arduino, wearables, Quest sensors), processing (desktop/edge compute and ML), and visualization (Unity app).
+  - When a specific messaging/transport layer is chosen (e.g., WebSockets, UDP, OSC, gRPC), add:
+    - Protocol name.
+    - Key libraries and versions.
+    - Any schemas or message formats.
+
+## Documentation and Source of Truth
+
+- **Prioritized specification:** `docs/FinalStretchDoc.md` — scope, hardware, goals, inference split; **authoritative** for decisions.
+- **`docs/MLOptions.md`** — ML path detail (Random Forest + interval model, labels, open items).
+- **Other `docs/` files** (e.g. `PROJECT.md`, `ProjectProposal.md`, older pipeline notes) — optional archive or background; **do not** override `FinalStretchDoc.md`.
+- **Cursor rules:**
+  - `@project.mdc` – high-level D.U.C.K project context and tech stack.
+  - This file – concrete technologies and version anchors for day-to-day development.
+
+Whenever the actual toolchain or major dependencies change (e.g., Unity upgrade, new ML framework, new Arduino board), update this rule alongside the above docs so future automation stays aligned with the real stack.
+
